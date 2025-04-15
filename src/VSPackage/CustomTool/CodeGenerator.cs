@@ -1,3 +1,5 @@
+﻿using System.CodeDom;
+
 namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
 {
     public abstract class CodeGenerator : ICodeGenerator
@@ -12,5 +14,7 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
         public string Namespace { get; set; }
 
         public abstract string GenerateCode();
+
+        public abstract CodeCompileUnit CodeCompileUnit { get; }
     }
 }
