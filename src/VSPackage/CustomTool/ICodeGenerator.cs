@@ -1,4 +1,5 @@
 ﻿using System.CodeDom;
+using System.CodeDom.Compiler;
 
 namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
 {
@@ -8,5 +9,6 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
         string Namespace { get; set; }
         string GenerateCode();
         CodeCompileUnit CodeCompileUnit { get; }
+        CodeDomProvider Provider { get; }
     }
 }

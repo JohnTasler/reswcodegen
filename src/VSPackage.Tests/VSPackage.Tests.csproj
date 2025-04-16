@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ClassNameExtractorTests.cs" />
     <Compile Include="CodeGeneratorFactoryTests.cs" />
+    <Compile Include="CodeGeneratorTestsBase.cs" />
     <Compile Include="CSharpCodeGeneratorTests.cs" />
     <Compile Include="CSharpCodeGeneratorTestsInternal.cs" />
     <Compile Include="ResourceParserErrorHandlingTests.cs" />
@@ -57,6 +58,7 @@
   <ItemGroup>
     <Content Include="Resources\Resources.resw">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\ResourcesWithoutComments.resw">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

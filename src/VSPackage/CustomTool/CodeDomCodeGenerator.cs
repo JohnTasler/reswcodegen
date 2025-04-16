@@ -28,7 +28,7 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
             this.classAccessibility = classAccessibility;
             compileUnit = new CodeCompileUnit();
             provider = codeDomProvider ?? new CSharpCodeProvider();
-            ownsProvider = provider != codeDomProvider;
+            ownsProvider = codeDomProvider is null;
             codeNamespace = new CodeNamespace(defaultNamespace);
         }
 
@@ -219,6 +219,8 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
         }
 
         public override CodeCompileUnit CodeCompileUnit => compileUnit;
+
+        public override CodeDomProvider Provider => provider;
 
         #region IDisposable
 

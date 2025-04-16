@@ -25,10 +25,10 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void ThrowsFileNotFoundException()
         {
-            ClassNameExtractor.GetClassName("C:\\Test\\Resources\\Strings.resw");
+            Assert.ThrowsExactly<FileNotFoundException>(
+                () => ClassNameExtractor.GetClassName("C:\\Test\\Resources\\Strings.resw"));
         }
     }
 }

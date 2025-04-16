@@ -1,4 +1,5 @@
 ﻿using System.CodeDom;
+using System.CodeDom.Compiler;
 
 namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
 {
@@ -16,5 +17,7 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
         public abstract string GenerateCode();
 
         public abstract CodeCompileUnit CodeCompileUnit { get; }
+
+        public abstract CodeDomProvider Provider { get; }
     }
 }
