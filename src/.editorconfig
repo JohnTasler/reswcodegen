@@ -3,22 +3,16 @@ root = true
 
 # Shared preferences
 [*]
-
-# New line preferences
 end_of_line = crlf
 insert_final_newline = true
 trim_trailng_whitespace = true
 charset = utf-8
-
-# Indentation and spacing
 indent_size = 4
 indent_style = space
 tab_width = 4
 
 # XML files
-[*.{xml,xsl,xsd,xslt,csproj,settings,targets}]
-
-# Indentation and spacing
+[*.{xml,xsl,xsd,xslt,*proj,settings,targets,vsixmanifest,runsettings}]
 indent_size = 2
 indent_style = space
 tab_width = 2
@@ -31,8 +25,6 @@ tab_width = 2
 
 # C# files
 [*.cs]
-
-#### Core EditorConfig Options ####
 
 #### .NET Code Actions ####
 

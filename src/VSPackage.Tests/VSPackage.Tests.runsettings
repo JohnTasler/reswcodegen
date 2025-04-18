@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+    <MSTest>
+        <DeleteDeploymentDirectoryAfterTestRunIsComplete>true</DeleteDeploymentDirectoryAfterTestRunIsComplete>
+        <DeployTestSourceDependencies>true</DeployTestSourceDependencies>
+        <OrderTestsByNameInClass>true</OrderTestsByNameInClass>
+        <ConsiderFixturesAsSpecialTests>true</ConsiderFixturesAsSpecialTests>
+    </MSTest>
+</RunSettings>
