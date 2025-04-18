@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,14 +26,8 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests
         private TypeAttributes? classAccessibility;
         private CodeDomProvider provider;
 
-        private static int s_ctorCount = 0;
-        private static int s_initCount = 0;
-        private static int s_compileCount = 0;
-
         public CodeGeneratorTestsBase(TypeAttributes? classAccessibility = null, CodeDomProvider provider = null)
         {
-            Debug.WriteLine($"{nameof(CodeGeneratorTestsBase)} constructor count = {++s_ctorCount}");
-
             this.classAccessibility = classAccessibility;
             this.provider = provider;
         }
@@ -40,31 +35,52 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests
         [TestInitialize]
         public void Initialize()
         {
-            Debug.WriteLine($"{nameof(CodeGeneratorTestsBase)}.{nameof(Initialize)} count = {++s_initCount}");
-
             ReswFileContents = File.ReadAllText(FILE_PATH);
 
             Target = new CodeGeneratorFactory().Create(FILE_PATH.Replace(".resw", string.Empty), "TestApp", ReswFileContents, provider, classAccessibility: classAccessibility);
             Actual = Target.GenerateCode();
         }
 
-        protected void CompileGeneratedCode()
+        [TestMethod]
+        public void GenerateCodeDoesNotReturnNull()
         {
-            if (CompilerResults is not null)
-            {
-                Assert.IsNotNull(Target, nameof(Target));
-                Assert.IsNotNull(GeneratedType, nameof(GeneratedType));
-                return;
-            }
+            Assert.IsNotNull(Actual);
+        }
 
-            Debug.WriteLine($"{nameof(CodeGeneratorTestsBase)}.{nameof(CompileGeneratedCode)} count = {++s_compileCount}");
+        [TestMethod]
+        public void GeneratedCodeCompilesCleanly()
+        {
+            CompileGeneratedCode();
 
+            Assert.IsFalse(CompilerResults.Errors.HasErrors, string.Join("\n", CompilerResults.Output.OfType<string>()));
+            Assert.IsFalse(CompilerResults.Errors.HasWarnings, string.Join("\n", CompilerResults.Output.OfType<string>()));
+            Assert.IsNotNull(GeneratedType);
+        }
+
+        [TestMethod]
+        public void EnsureNoNamespaceConflicts()
+        {
+            CompileGeneratedCode(GenerateClassesInConflictingNamespaces());
+
+            Assert.IsFalse(CompilerResults.Errors.HasErrors, string.Join("\n", CompilerResults.Output.OfType<string>()));
+            Assert.IsFalse(CompilerResults.Errors.HasWarnings, string.Join("\n", CompilerResults.Output.OfType<string>()));
+            Assert.IsNotNull(GeneratedType);
+        }
+
+        [TestMethod]
+        public void ContainsProjectUrl()
+        {
+            Assert.Contains("http://bit.ly/reswcodegen", Actual);
+        }
+
+        protected void CompileGeneratedCode(params CodeCompileUnit[] additionalCompileUnits)
+        {
             // Invoke compilation.
             var compilerParameters = GetCompilerParameters(Target.Provider);
-            CompilerResults = Target.Provider.CompileAssemblyFromDom(compilerParameters, Target.CodeCompileUnit);
+            CompilerResults = Target.Provider.CompileAssemblyFromDom(compilerParameters, [Target.CodeCompileUnit, .. additionalCompileUnits]);
 
             Debug.WriteLine($"Compiler returned {CompilerResults.NativeCompilerReturnValue}");
-            Debug.WriteLine($"Output\n{string.Join("\n", CompilerResults.Output.OfType<string>())}");
+            Debug.WriteLine($"Output:\n{string.Join("\n", CompilerResults.Output.OfType<string>())}");
 
             Debug.WriteLine($"Environment.CurrentDirectory     ={Environment.CurrentDirectory}");
             Debug.WriteLine($"CompilerResults.PathToAssembly   ={CompilerResults.PathToAssembly}");
@@ -76,6 +92,38 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests
             GeneratedType = CompilerResults.CompiledAssembly.GetType("TestApp.Resources");
         }
 
+        protected CodeCompileUnit GenerateClassesInConflictingNamespaces()
+        {
+            return new CodeCompileUnit
+            {
+                Namespaces =
+                {
+                    new CodeNamespace("TestApp.Windows.Library")
+                    {
+                        Types =
+                        {
+                            new CodeTypeDeclaration("Class1")
+                            {
+                                IsClass = true,
+                                TypeAttributes = TypeAttributes.Sealed | TypeAttributes.Public,
+                            }
+                        }
+                    },
+                    new CodeNamespace("TestApp.System.Library")
+                    {
+                        Types =
+                        {
+                            new CodeTypeDeclaration("Class2")
+                            {
+                                IsClass = true,
+                                TypeAttributes = TypeAttributes.Sealed | TypeAttributes.Public,
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
         private static CompilerParameters GetCompilerParameters(CodeDomProvider provider)
         {
             var compilerOptions = new Dictionary<string, string>
@@ -84,6 +132,7 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests
                 { "optimize-", null },
             };
 
+            // The VB compiler has slightly different names for some of its options
             if (provider.GetType() == typeof(VBCodeProvider))
             {
                 compilerOptions["libpath"] = compilerOptions["lib"];

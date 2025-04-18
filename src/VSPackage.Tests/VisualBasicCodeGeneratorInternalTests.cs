@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool;
@@ -14,22 +14,6 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests
         public VisualBasicCodeGeneratorInternalTests()
             : base(TypeAttributes.NestedAssembly, new VBCodeProvider())
         {
-        }
-
-        [TestMethod]
-        public void GenerateCodeDoesNotReturnNull()
-        {
-            Assert.IsNotNull(Actual);
-        }
-
-        [TestMethod]
-        public void GeneratedCodeCompilesCleanly()
-        {
-            CompileGeneratedCode();
-
-            Assert.IsFalse(CompilerResults.Errors.HasErrors, string.Join("\n", CompilerResults.Output.OfType<string>()));
-            Assert.IsFalse(CompilerResults.Errors.HasWarnings, string.Join("\n", CompilerResults.Output.OfType<string>()));
-            Assert.IsNotNull(GeneratedType);
         }
 
         [TestMethod]
@@ -95,12 +79,6 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests
         public void ResourceLoaderInitializedWithClassName()
         {
             Assert.Contains("ResourceLoader.GetForCurrentView(currentAssemblyName + \"/Resources\")", Actual);
-        }
-
-        [TestMethod]
-        public void ContainsProjectUrl()
-        {
-            Assert.Contains("http://bit.ly/reswcodegen", Actual);
         }
     }
 }

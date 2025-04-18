@@ -1,4 +1,4 @@
-﻿using System.CodeDom.Compiler;
+using System.CodeDom.Compiler;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,23 +12,6 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests
         public CSharpCodeGeneratorTestsInternal()
             : base(TypeAttributes.NestedAssembly)
         {
-
-        }
-
-        [TestMethod]
-        public void GeneratedCodeCompilesCleanly()
-        {
-            CompileGeneratedCode();
-
-            Assert.IsFalse(CompilerResults.Errors.HasErrors, string.Join("\n", CompilerResults.Output.OfType<string>()));
-            Assert.IsFalse(CompilerResults.Errors.HasWarnings, string.Join("\n", CompilerResults.Output.OfType<string>()));
-            Assert.IsNotNull(GeneratedType);
-        }
-
-        [TestMethod]
-        public void GenerateCodeDoesNotReturnNull()
-        {
-            Assert.IsNotNull(Actual);
         }
 
         [TestMethod]
@@ -81,12 +64,6 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests
         public void ResourceLoaderInitializedWithClassName()
         {
             Assert.Contains("ResourceLoader.GetForCurrentView(currentAssemblyName + \"/Resources\");", Actual);
-        }
-
-        [TestMethod]
-        public void ContainsProjectUrl()
-        {
-            Assert.Contains("http://bit.ly/reswcodegen", Actual);
         }
     }
 }
