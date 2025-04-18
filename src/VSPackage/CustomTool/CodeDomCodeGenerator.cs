@@ -26,10 +26,10 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
         {
             this.className = className;
             this.classAccessibility = classAccessibility;
-            compileUnit = new CodeCompileUnit();
-            provider = codeDomProvider ?? new CSharpCodeProvider();
-            ownsProvider = codeDomProvider is null;
-            codeNamespace = new CodeNamespace(defaultNamespace);
+            this.compileUnit = new CodeCompileUnit();
+            this.provider = codeDomProvider ?? new CSharpCodeProvider();
+            this.ownsProvider = codeDomProvider is null;
+            this.codeNamespace = new CodeNamespace(defaultNamespace);
         }
 
         public override string GenerateCode()
@@ -210,12 +210,11 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
         {
             var options = new CodeGeneratorOptions { BracingStyle = "C" };
 
-            var code = new StringBuilder();
-
-            using (var writer = new StringWriter(code))
+            using (var writer = new StringWriter())
+            {
                 provider.GenerateCodeFromCompileUnit(compileUnit, writer, options);
-
-            return code.ToString();
+                return writer.ToString();
+            }
         }
 
         #region IDisposable
