@@ -1,19 +1,38 @@
-﻿# Remove the line below if you want to inherit .editorconfig settings from higher directories
+# Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
-# C# files
-[*.cs]
+# Shared preferences
+[*]
 
-#### Core EditorConfig Options ####
+# New line preferences
+end_of_line = crlf
+insert_final_newline = true
+trim_trailng_whitespace = true
+charset = utf-8
 
 # Indentation and spacing
 indent_size = 4
 indent_style = space
 tab_width = 4
 
-# New line preferences
-end_of_line = crlf
-insert_final_newline = true
+# XML files
+[*.{xml,xsl,xsd,xslt,csproj,settings,targets}]
+
+# Indentation and spacing
+indent_size = 2
+indent_style = space
+tab_width = 2
+
+# Solution Files
+[*.{sln,slnx}]
+indent_size = 2
+indent_style = tab
+tab_width = 2
+
+# C# files
+[*.cs]
+
+#### Core EditorConfig Options ####
 
 #### .NET Code Actions ####
 
