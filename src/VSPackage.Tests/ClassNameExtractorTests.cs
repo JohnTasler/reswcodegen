@@ -28,6 +28,6 @@ public class ClassNameExtractorTests
     public void ThrowsFileNotFoundException()
     {
         Assert.ThrowsExactly<FileNotFoundException>(
-            () => ClassNameExtractor.GetClassName("C:\\Test\\Resources\\Strings.resw"));
+            () => ClassNameExtractor.GetClassName(@"C:\Test\Resources\Strings.resw"));
     }
 }

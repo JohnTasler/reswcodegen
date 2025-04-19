@@ -11,32 +11,73 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.CustomTool.Tests;
-
 using ICodeGenerator = VSPackage.CustomTool.ICodeGenerator;
 
 public abstract class CodeGeneratorTestsBase
 {
     protected const string FILE_PATH = "Resources.resw";
 
-    protected abstract TypeAttributes? ClassAccessibility { get; set; }
-    protected abstract CodeDomProvider Provider { get; set; }
-    protected abstract string ReswFileContents { get; set; }
-    protected abstract string Actual { get; set; }
-    protected abstract ICodeGenerator Target { get; set; }
-    protected abstract CompilerResults CompilerResults { get; set; }
-    protected abstract Type GeneratedType { get; set; }
+    private readonly StaticData staticData;
 
-    protected CodeGeneratorTestsBase(TypeAttributes? classAccessibility = null, CodeDomProvider provider = null)
+    #region Instance Properties that access the derived class's static data
+
+    protected TypeAttributes? ClassAccessibility
     {
+        get => staticData.ClassAccessibility;
+        set => staticData.ClassAccessibility = value;
+    }
+
+    protected CodeDomProvider Provider
+    {
+        get => staticData.Provider;
+        set => staticData.Provider = value;
+    }
+
+    protected string ReswFileContents
+    {
+        get => staticData.ReswFileContents;
+        set => staticData.ReswFileContents = value;
+    }
+
+    protected string Actual
+    {
+        get => staticData.Actual;
+        set => staticData.Actual = value;
+    }
+
+    protected ICodeGenerator Target
+    {
+        get => staticData.Target;
+        set => staticData.Target = value;
+    }
+
+    protected CompilerResults CompilerResults
+    {
+        get => staticData.CompilerResults;
+        set => staticData.CompilerResults = value;
+    }
+
+    protected Type GeneratedType
+    {
+        get => staticData.GeneratedType;
+        set => staticData.GeneratedType = value;
+    }
+
+    #endregion
+
+    protected CodeGeneratorTestsBase(StaticData staticData, TypeAttributes? classAccessibility = null, CodeDomProvider provider = null)
+    {
+        this.staticData = staticData;
+
         this.ClassAccessibility ??= classAccessibility;
         this.Provider ??= provider;
 
         this.ReswFileContents ??= File.ReadAllText(FILE_PATH);
 
-        this.Target ??= new CodeGeneratorFactory().Create(FILE_PATH.Replace(".resw", string.Empty), "TestApp", ReswFileContents, provider, classAccessibility: classAccessibility);
-        this.Actual ??= Target.GenerateCode();
+        this.Target ??= new CodeGeneratorFactory().Create(FILE_PATH.Replace(".resw", string.Empty), "TestApp", ReswFileContents, Provider, classAccessibility);
+        this.Provider = this.Target.Provider;
+        this.Actual ??= this.Target.GenerateCode();
     }
-
 
     [TestMethod]
     public void GenerateCodeDoesNotReturnNull()
@@ -78,15 +119,15 @@ public abstract class CodeGeneratorTestsBase
 
         Debug.WriteLine($"Compiler returned {CompilerResults.NativeCompilerReturnValue}");
         Debug.WriteLine($"Output:\n{string.Join("\n", CompilerResults.Output.OfType<string>())}");
-
+        Debug.WriteLine(null);
         Debug.WriteLine($"Environment.CurrentDirectory     ={Environment.CurrentDirectory}");
         Debug.WriteLine($"CompilerResults.PathToAssembly   ={this.CompilerResults.PathToAssembly}");
         Debug.WriteLine($"CompilerResults.TempFiles.TempDir={this.CompilerResults.TempFiles.TempDir}");
         Debug.WriteLine($"CompilerResults.TempFiles.Count  ={this.CompilerResults.TempFiles.Count}");
         Debug.WriteLine($"CompilerResults.TempFiles        ={string.Join(", ", this.CompilerResults.TempFiles.OfType<string>())}");
         Debug.WriteLine($"CompilerResults.Errors.Count     ={this.CompilerResults.Errors.Count}");
-
         Debug.WriteLine($"CompilerResults.CompiledAssembly.Location={this.CompilerResults.CompiledAssembly.Location}");
+
         this.GeneratedType = CompilerResults.CompiledAssembly.GetType("TestApp.Resources");
     }
 
@@ -96,33 +137,13 @@ public abstract class CodeGeneratorTestsBase
         {
             Namespaces =
             {
-                new CodeNamespace("TestApp.Windows.Library")
-                {
-                    Types =
-                    {
-                        new CodeTypeDeclaration("Class1")
-                        {
-                            IsClass = true,
-                            TypeAttributes = TypeAttributes.Sealed | TypeAttributes.Public,
-                        }
-                    }
-                },
-                new CodeNamespace("TestApp.System.Library")
-                {
-                    Types =
-                    {
-                        new CodeTypeDeclaration("Class2")
-                        {
-                            IsClass = true,
-                            TypeAttributes = TypeAttributes.Sealed | TypeAttributes.Public,
-                        }
-                    }
-                }
+                new CodeNamespace("TestApp.Windows.Library") { Types = { new CodeTypeDeclaration("Class1") { IsClass = true, TypeAttributes = TypeAttributes.Sealed | TypeAttributes.Public, } } },
+                new CodeNamespace("TestApp.System.Library") { Types = { new CodeTypeDeclaration("Class2") { IsClass = true, TypeAttributes = TypeAttributes.Sealed | TypeAttributes.Public, } } }
             }
         };
     }
 
-    private static CompilerParameters GetCompilerParameters(CodeDomProvider provider)
+    private CompilerParameters GetCompilerParameters(CodeDomProvider provider)
     {
         var compilerOptions = new Dictionary<string, string>
         {
@@ -143,14 +164,14 @@ public abstract class CodeGeneratorTestsBase
             GenerateExecutable = false,
 
             // Set the assembly file name to generate.
-            // OutputAssembly = "GeneratedResources.dll",
+            // OutputAssembly = $"GeneratedResources.{this.GetType().Name}.dll",
 
             // Save the assembly as a non-file.
             GenerateInMemory = true,
 
             // Set the level at which the compiler
             // should start displaying warnings.
-            WarningLevel = 3,
+            WarningLevel = 4,
 
             // Set whether to treat all warnings as errors.
             TreatWarningsAsErrors = true,
@@ -177,5 +198,16 @@ public abstract class CodeGeneratorTestsBase
         };
 
         return compilerParameters;
+    }
+
+    protected sealed class StaticData
+    {
+        public TypeAttributes? ClassAccessibility { get; set; }
+        public CodeDomProvider Provider { get; set; }
+        public string ReswFileContents { get; set; }
+        public string Actual { get; set; }
+        public ICodeGenerator Target { get; set; }
+        public CompilerResults CompilerResults { get; set; }
+        public Type GeneratedType { get; set; }
     }
 }
