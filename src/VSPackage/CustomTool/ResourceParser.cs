@@ -11,7 +11,7 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
             ReswFileContents = reswFileContents;
         }
 
-        public string ReswFileContents { get; set; }
+        public string ReswFileContents { get; private set; }
 
         public List<ResourceItem> Parse()
         {
@@ -41,7 +41,7 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
                 {
                     var commentElement = element.Descendants("comment").FirstOrDefault();
                     if (commentElement != null)
-                        item.Comment = commentElement.Value; 
+                        item.Comment = commentElement.Value;
                 }
 
                 list.Add(item);
