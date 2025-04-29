@@ -217,6 +217,10 @@ namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
             }
         }
 
+        public override CodeCompileUnit CodeCompileUnit => compileUnit;
+
+        public override CodeDomProvider Provider => provider;
+
         #region IDisposable
 
         private bool disposed;
