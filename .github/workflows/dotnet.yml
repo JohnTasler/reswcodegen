@@ -6,6 +6,9 @@ name: .NET
 on:
   workflow_dispatch:
 
+env:
+  VERSION: 1.8.0.${{ github.run_number }}
+
 jobs:
   build:
 
@@ -22,7 +25,7 @@ jobs:
     - name: Update Version
       run: >
         ((Get-Content -Path VSPackage/source.extension.vsixmanifest -Raw) -Replace "1.0.0", "${{ env.VERSION }}") | Set-Content -Path VSPackage/source.extension.vsixmanifest;
-        ((Get-Content -Path VSPackage/Properties/AssemblyInfo.cs -Raw) -Replace "1.0.0", "${{ env.VERSION }}") | Set-Content -Path VSPackage/Properties/AssemblyInfo.cs;
+        ((Get-Content -Path VSPackage/Properties/AssemblyInfo.cs -Raw) -Replace "1.0.0.0", "${{ env.VERSION }}") | Set-Content -Path VSPackage/Properties/AssemblyInfo.cs;
       working-directory: src
       shell: pwsh
     - name: Build
