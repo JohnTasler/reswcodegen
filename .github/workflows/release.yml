@@ -42,7 +42,7 @@ jobs:
       working-directory: src
 
     - name: Move build output
-      run: mv src/VSPackage/bin/Release/ResWFileCodeGenerator.vsix ResWFileCodeGenerator-${{ env.VERSION }}.vsix
+      run: mv src/VSPackage/bin/Release/net472-windows/ResWFileCodeGenerator.vsix ResWFileCodeGenerator-${{ env.VERSION }}.vsix
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v4
