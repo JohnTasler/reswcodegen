@@ -9,6 +9,7 @@
     <RootNamespace>ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage</RootNamespace>
     <AssemblyName>ReswFileCodeGenerator</AssemblyName>
     <LangVersion>12</LangVersion>
+    <ImplicitUsings>true</ImplicitUsings>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
     <UseCodebase>true</UseCodebase>

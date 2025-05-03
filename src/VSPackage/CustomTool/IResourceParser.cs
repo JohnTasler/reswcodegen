@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 
-namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool
+namespace ChristianHelle.DeveloperTools.CodeGenerators.Resw.VSPackage.CustomTool;
+
+public interface IResourceParser
 {
-    public interface IResourceParser
-    {
-        string ReswFileContents { get; }
-        List<ResourceItem> Parse();
-    }
+    string ReswFileContents { get; }
+    List<ResourceItem> Parse();
 }
