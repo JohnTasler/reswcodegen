@@ -10,8 +10,10 @@
     <AssemblyName>ReswFileCodeGenerator</AssemblyName>
     <LangVersion>12</LangVersion>
     <ImplicitUsings>true</ImplicitUsings>
+    <UseWindowsForms>true</UseWindowsForms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
+    <VssdkCompatibleExtension>true</VssdkCompatibleExtension>
     <UseCodebase>true</UseCodebase>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
@@ -40,11 +42,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer" Version="2.23.0 " />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.13.40008" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.13.2126">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Extensibility.Sdk" Version="17.13.40008" />
+    <PackageReference Include="Microsoft.VisualStudio.Extensibility.Build" Version="17.13.40008" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.0.1" ExcludeAssets="runtime" />
+    <!--<PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.13.2126" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />-->
   </ItemGroup>
 
 </Project>
